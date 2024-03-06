@@ -31,3 +31,5 @@ build
 !gradle-wrapper.jar
 # Avoid ignore Gradle wrappper properties
 !gradle-wrapper.properties
+modules
+deps

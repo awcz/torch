@@ -1,5 +1,6 @@
 import korlibs.image.color.Colors
 import korlibs.korge.Korge
+import korlibs.korge.scene.sceneContainer
 import korlibs.math.geom.Size
 
 suspend fun main() = Korge(
@@ -8,4 +9,7 @@ suspend fun main() = Korge(
     backgroundColor = Colors["#1f255d"],
 ) {
     println("Hello KorGE")
+    sceneContainer().changeTo {
+        Scene1()
+    }
 }
