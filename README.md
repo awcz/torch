@@ -21,7 +21,6 @@ way to manage the project, but things might change later on.
 <details open>
   <summary>   <b>📝 TO DO</b> </summary>
 - Create first simple scene<br>
-- Add deployment scripts
 
 </details>
 <br><br>
@@ -29,8 +28,9 @@ way to manage the project, but things might change later on.
   <summary>   <b>⌛ IN PROGRESS</b> </summary>
  - Create a project skeleton<br>
  - Improve README <br>
+ - Add deployment scripts<br>
  - Specify the idea for the game <br>
- - Build a simple 100-day roadmap <br>
+ - Build a simple 100-days roadmap <br>
 </details>
 <br><br>
 <details>
