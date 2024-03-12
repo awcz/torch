@@ -1,6 +1,9 @@
 import korlibs.image.color.Colors
+import korlibs.io.file.std.resourcesVfs
 import korlibs.korge.box2d.registerBodyWithFixture
 import korlibs.korge.input.onClick
+import korlibs.korge.ldtk.view.LDTKWorldView
+import korlibs.korge.ldtk.view.readLDTKWorld
 import korlibs.korge.scene.Scene
 import korlibs.korge.view.*
 import korlibs.math.geom.RectCorners
@@ -9,6 +12,8 @@ import org.jbox2d.dynamics.BodyType
 
 class Scene1 : Scene() {
     override suspend fun SContainer.sceneMain() {
+
+
         fixedSizeContainer(Size(stage!!.width, stage!!.height)) {
             solidRect(580, 30, Colors.DARKGREEN).position(110, 300).registerBodyWithFixture(
                 type = BodyType.STATIC,
@@ -23,5 +28,8 @@ class Scene1 : Scene() {
                 }
             }
         }
+        val world = resourcesVfs["ldtk/torchmap2d.ldtk"].readLDTKWorld()
+        val mapView = LDTKWorldView(world, showCollisions = true)
+        this += mapView
     }
 }

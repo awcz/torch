@@ -20,15 +20,13 @@ way to manage the project, but things might change later on.
 
 <details open>
   <summary>   <b>📝 TO DO</b> </summary>
-- Create first simple scene<br>
+ - Improve README <br>
 
 </details>
 <br><br>
 <details open>
   <summary>   <b>⌛ IN PROGRESS</b> </summary>
- - Create a project skeleton<br>
- - Improve README <br>
- - Add deployment scripts<br>
+ - Create first simple scene<br>
  - Specify the idea for the game <br>
  - Build a simple 100-days roadmap <br>
 </details>
@@ -36,6 +34,8 @@ way to manage the project, but things might change later on.
 <details>
   <summary>   <b>✅ DONE</b> </summary>
  - Init the repo :)
+ - Add deployment scripts<br>
+ - Create a project skeleton<br>
 </details>
 <br><br>
 <details>
