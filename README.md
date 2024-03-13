@@ -21,6 +21,7 @@ way to manage the project, but things might change later on.
 <details open>
   <summary>   <b>📝 TO DO</b> </summary>
  - Improve README <br>
+ - Prepare a complete tileset <br>
 
 </details>
 <br><br>
