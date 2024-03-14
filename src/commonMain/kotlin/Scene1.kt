@@ -28,7 +28,7 @@ class Scene1 : Scene() {
                 }
             }
         }
-        val world = resourcesVfs["ldtk/torchmap2d.ldtk"].readLDTKWorld()
+        val world = resourcesVfs["ldtk/torch_map.ldtk"].readLDTKWorld()
         val mapView = LDTKWorldView(world, showCollisions = true)
         this += mapView
     }
