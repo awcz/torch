@@ -12,10 +12,13 @@ import org.jbox2d.dynamics.BodyType
 
 class Scene1 : Scene() {
     override suspend fun SContainer.sceneMain() {
-
+        val world = resourcesVfs["ldtk/torch_map.ldtk"].readLDTKWorld()
+        val mapView = LDTKWorldView(world, showCollisions = true)
+        mapView.scale = 2.0
+        this += mapView
 
         fixedSizeContainer(Size(stage!!.width, stage!!.height)) {
-            solidRect(580, 30, Colors.DARKGREEN).position(110, 300).registerBodyWithFixture(
+            solidRect(520, 30, Colors.DARKGREEN).position(0, 260).registerBodyWithFixture(
                 type = BodyType.STATIC,
                 friction = 1
             )
@@ -28,8 +31,6 @@ class Scene1 : Scene() {
                 }
             }
         }
-        val world = resourcesVfs["ldtk/torch_map.ldtk"].readLDTKWorld()
-        val mapView = LDTKWorldView(world, showCollisions = true)
-        this += mapView
+
     }
 }
