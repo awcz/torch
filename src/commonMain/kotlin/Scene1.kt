@@ -18,10 +18,10 @@ class Scene1 : Scene() {
         this += mapView
 
         fixedSizeContainer(Size(stage!!.width, stage!!.height)) {
-            solidRect(520, 30, Colors.DARKGREEN).position(0, 260).registerBodyWithFixture(
-                type = BodyType.STATIC,
-                friction = 1
-            )
+//            solidRect(520, 30, Colors.DARKGREEN).position(0, 260).registerBodyWithFixture(
+//                type = BodyType.STATIC,
+//                friction = 1
+//            )
             onClick {
                 val position = it.currentPosLocal
                 for (i in 1..10) {
