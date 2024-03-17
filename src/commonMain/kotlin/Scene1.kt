@@ -1,3 +1,4 @@
+import korlibs.event.Key
 import korlibs.image.color.Colors
 import korlibs.io.file.std.resourcesVfs
 import korlibs.korge.box2d.registerBodyWithFixture
@@ -8,6 +9,7 @@ import korlibs.korge.scene.Scene
 import korlibs.korge.view.*
 import korlibs.math.geom.RectCorners
 import korlibs.math.geom.Size
+import korlibs.time.TimeSpan
 import org.jbox2d.dynamics.BodyType
 
 class Scene1 : Scene() {
@@ -29,6 +31,18 @@ class Scene1 : Scene() {
                         .position(position.x, position.y)
                         .registerBodyWithFixture(type = BodyType.DYNAMIC)
                 }
+            }
+
+            mapView.addUpdater { duration: TimeSpan ->
+                if (input.keys[Key.LEFT]) {
+                    val player = this.findViewByName("Player")
+                    player!!.x += 1;
+                }
+                if (input.keys.pressing(Key.RIGHT)) {
+                    val player = this.findViewByName("Player")
+                    player!!.x -= 1;
+                }
+                if (input.keys.justPressed(Key.ESCAPE)) views.gameWindow.close(0)
             }
         }
 
