@@ -2,3 +2,4 @@ dependencies:
 - https://github.com/korlibs/korge-box2d/tree/v0.1.2/korge-box2d
 - https://github.com/korlibs/korge-ldtk/tree/v1.0.2/korge-ldtk
 - https://github.com/korlibs/mascots.korge.org/tree/v1.0.0/korge-mascots
+- https://github.com/korlibs/korge-virtualcontroller/tree/v1.0.0/korge-virtualcontroller
