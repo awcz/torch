@@ -1,4 +1,4 @@
-import korlibs.event.GameButton
+import korlibs.event.Key
 import korlibs.image.color.Colors
 import korlibs.io.file.std.resourcesVfs
 import korlibs.korge.KeepOnReload
@@ -8,7 +8,6 @@ import korlibs.korge.ldtk.view.LDTKWorldView
 import korlibs.korge.ldtk.view.readLDTKWorld
 import korlibs.korge.scene.Scene
 import korlibs.korge.view.*
-import korlibs.korge.virtualcontroller.virtualController
 import korlibs.math.geom.Point
 import korlibs.math.geom.RectCorners
 import korlibs.math.geom.Size
@@ -40,17 +39,23 @@ class Scene1 : Scene() {
             }
         }
 
-        virtualController().apply {
-            down(GameButton.BUTTON_SOUTH) {
+        mapView.addUpdater {
+            if (input.keys[Key.LEFT]) {
+                playerPosition = player.pos + Point(-10, 0)
+            }
+            if (input.keys[Key.RIGHT]) {
+                playerPosition = player.pos + Point(10, 0)
+            }
+            if (input.keys[Key.UP]) {
                 playerPosition = player.pos + Point(0, -10)
             }
-            changed(GameButton.LX) {
-                playerPosition = player.pos + Point(2.0, 0)
+            if (input.keys[Key.DOWN]) {
+                playerPosition = player.pos + Point(0, 10)
             }
-            changed(GameButton.LY) {
-                playerPosition = player.pos + Point(-2.0, 0)
-            }
+
+            if (input.keys.justPressed(Key.ESCAPE)) views.gameWindow.close(0)
         }
+
 
         addFixedUpdater(60.hz) {
             run {
