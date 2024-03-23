@@ -23,7 +23,7 @@ class Scene1 : Scene() {
     override suspend fun SContainer.sceneMain() {
         val world = resourcesVfs["ldtk/torch_map.ldtk"].readLDTKWorld()
         val mapView = LDTKWorldView(world, showCollisions = true)
-        mapView.scale = 2.0
+        mapView.scale = 1.0
         this += mapView
         player = this.findViewByName("Player")!!
         this += player
