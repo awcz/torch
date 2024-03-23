@@ -1,67 +1,66 @@
 import korlibs.event.Key
-import korlibs.image.color.Colors
 import korlibs.io.file.std.resourcesVfs
-import korlibs.korge.KeepOnReload
-import korlibs.korge.box2d.registerBodyWithFixture
-import korlibs.korge.input.onClick
+import korlibs.korge.input.keys
+import korlibs.korge.ldtk.view.LDTKCollisions
 import korlibs.korge.ldtk.view.LDTKWorldView
+import korlibs.korge.ldtk.view.createCollisionMaps
 import korlibs.korge.ldtk.view.readLDTKWorld
 import korlibs.korge.scene.Scene
-import korlibs.korge.view.*
+import korlibs.korge.view.SContainer
+import korlibs.korge.view.View
+import korlibs.korge.view.addFixedUpdater
 import korlibs.math.geom.Point
-import korlibs.math.geom.RectCorners
-import korlibs.math.geom.Size
 import korlibs.time.hz
-import org.jbox2d.dynamics.BodyType
+import korlibs.time.seconds
+
+private const val COLLISION_MARKER = 1
+private const val GRAVITY = 10
+private const val JUMP_STEP_Y = 5
+private const val MOVE_STEP_X = 1.5
+private const val REFRESHING_HZ = 50
 
 class Scene1 : Scene() {
 
-    @KeepOnReload
-    var playerPosition = Point(0, 100)
-
+    private lateinit var collisions: LDTKCollisions
     private lateinit var player: View
     override suspend fun SContainer.sceneMain() {
         val world = resourcesVfs["ldtk/torch_map.ldtk"].readLDTKWorld()
-        val mapView = LDTKWorldView(world, showCollisions = true)
-        mapView.scale = 1.0
+        val mapView = LDTKWorldView(world)
+        player = mapView.findViewByName("Player") ?: throw IllegalStateException()
+        collisions = world.createCollisionMaps()
         this += mapView
-        player = this.findViewByName("Player")!!
         this += player
 
-        fixedSizeContainer(Size(stage!!.width, stage!!.height)) {
-            onClick {
-                val position = it.currentPosLocal
-                for (i in 1..10) {
-                    fastRoundRect(Size(30, 30), RectCorners(1, 2), Colors.RED)
-                        .position(position.x, position.y)
-                        .registerBodyWithFixture(type = BodyType.DYNAMIC)
-                }
+        val refreshing = REFRESHING_HZ.hz
+        var moveInput = 0.0
+        var currentMove = Point(0, 0)
+
+        addFixedUpdater(refreshing) {
+            moveIfPossible(Point(MOVE_STEP_X, 0) * moveInput)
+            currentMove += Point(0, GRAVITY) * refreshing.timeSpan.seconds
+            if (!moveIfPossible(currentMove)) {
+                currentMove = Point.ZERO
             }
         }
 
-        mapView.addUpdater {
-            if (input.keys[Key.LEFT]) {
-                playerPosition = player.pos + Point(-10, 0)
+        mapView.keys {
+            val moveSpeed = 1.2
+            justDown(Key.LEFT) { moveInput = -MOVE_STEP_X * moveSpeed }
+            justDown(Key.RIGHT) { moveInput = MOVE_STEP_X * moveSpeed }
+            justDown(Key.SPACE, Key.UP) {
+                if (currentMove.y == 0.0)
+                    currentMove += Point(0, -JUMP_STEP_Y)
             }
-            if (input.keys[Key.RIGHT]) {
-                playerPosition = player.pos + Point(10, 0)
-            }
-            if (input.keys[Key.UP]) {
-                playerPosition = player.pos + Point(0, -10)
-            }
-            if (input.keys[Key.DOWN]) {
-                playerPosition = player.pos + Point(0, 10)
-            }
-
-            if (input.keys.justPressed(Key.ESCAPE)) views.gameWindow.close(0)
+            up(Key.LEFT, Key.RIGHT) { moveInput = 0.0 }
         }
+    }
 
-
-        addFixedUpdater(60.hz) {
-            run {
-                player.x = playerPosition.x
-                player.y = playerPosition.y
-            }
+    private fun moveIfPossible(move: Point): Boolean {
+        val destination = player.pos + move
+        val isValidMove = collisions.getPixel(destination) != COLLISION_MARKER
+        if (isValidMove) {
+            player.pos = destination
         }
+        return isValidMove
     }
 }
