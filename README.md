@@ -22,14 +22,13 @@ way to manage the project, but things might change later on.
   <summary>   <b>📝 TO DO</b> </summary>
  - Improve README <br>
  - Prepare a complete tileset <br>
-
+ - Improve collisions system<br>
+ - Health indicator<br>
 </details>
 <br><br>
 <details open>
   <summary>   <b>⌛ IN PROGRESS</b> </summary>
- - Create first simple scene<br>
  - Specify the idea for the game <br>
- - Build a simple 100-days roadmap <br>
 </details>
 <br><br>
 <details>
@@ -37,6 +36,8 @@ way to manage the project, but things might change later on.
  - Init the repo :)
  - Add deployment scripts<br>
  - Create a project skeleton<br>
+ - Create first simple scene<br>
+ - Implement player controller<br>
 </details>
 <br><br>
 <details>
