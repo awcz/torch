@@ -34,9 +34,13 @@ class Scene1 : Scene() {
 
         val refreshing = REFRESHING_HZ.hz
         var moveInput = 0.0
+        var displayDebugLabels = false
         var currentMove = Point(0, 0)
         var health = 100
-        val uiText = mapView.uiText("$health / 100")
+        val healthLabel = mapView.uiText("")
+        val playerPositionLabel = mapView.uiText("")
+        playerPositionLabel.x = 200.0
+
         addFixedUpdater(refreshing) {
             moveIfPossible(Point(MOVE_STEP_X, 0) * moveInput)
             currentMove += Point(0, GRAVITY) * refreshing.timeSpan.seconds
@@ -46,8 +50,13 @@ class Scene1 : Scene() {
                 health -= 1
             }
 
-            uiText.text = "\uD83D\uDD25 $health"
+            healthLabel.text = " health: $health"
+            playerPositionLabel.x = sceneContainer.width - 100
+            playerPositionLabel.text = "[x:${player.pos.x.toInt()}, y:${player.pos.y.toInt()}] "
+            healthLabel.visible = displayDebugLabels
+            playerPositionLabel.visible = displayDebugLabels
         }
+
         mapView.keys {
             val moveSpeed = 1.2
             justDown(Key.LEFT) { moveInput = -MOVE_STEP_X * moveSpeed }
@@ -57,6 +66,7 @@ class Scene1 : Scene() {
                     currentMove += Point(0, -JUMP_STEP_Y)
             }
             up(Key.LEFT, Key.RIGHT) { moveInput = 0.0 }
+            justDown(Key.D) { displayDebugLabels = !displayDebugLabels }
         }
     }
 
