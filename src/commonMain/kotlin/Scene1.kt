@@ -1,18 +1,22 @@
 import korlibs.event.Key
+import korlibs.image.color.Colors
 import korlibs.io.file.std.resourcesVfs
+import korlibs.korge.box2d.registerBodyWithFixture
 import korlibs.korge.input.keys
 import korlibs.korge.ldtk.view.LDTKCollisions
+import korlibs.korge.ldtk.view.LDTKWorldView
 import korlibs.korge.ldtk.view.createCollisionMaps
 import korlibs.korge.ldtk.view.readLDTKWorld
 import korlibs.korge.scene.Scene
 import korlibs.korge.ui.uiText
-import korlibs.korge.view.SContainer
-import korlibs.korge.view.View
-import korlibs.korge.view.addFixedUpdater
+import korlibs.korge.view.*
 import korlibs.math.geom.Point
+import korlibs.math.geom.RectCorners
+import korlibs.math.geom.Size
 import korlibs.time.hz
 import korlibs.time.seconds
-import korlibs.korge.ldtk.view.LDTKWorldView
+import org.jbox2d.dynamics.BodyType
+import kotlin.random.Random
 
 private const val COLLISION_MARKER = 1
 private const val GRAVITY = 10
@@ -27,7 +31,11 @@ class Scene1 : Scene() {
     override suspend fun SContainer.sceneMain() {
         val world = resourcesVfs["ldtk/torch_map.ldtk"].readLDTKWorld()
         val mapView = LDTKWorldView(world)
-        player = mapView.findViewByName("Player") ?: throw IllegalStateException()
+        // player = mapView.findViewByName("Player") ?: throw IllegalStateException()
+        player = fastRoundRect(Size(20, 20), RectCorners(1, 2), Colors.RED)
+            .position(0, 0)
+            .registerBodyWithFixture(type = BodyType.KINEMATIC)
+
         collisions = world.createCollisionMaps()
         this += mapView
         this += player
@@ -48,6 +56,12 @@ class Scene1 : Scene() {
                 currentMove = Point.ZERO
             } else {
                 health -= 1
+            }
+
+            if (Random.nextFloat() < 0.015) {
+                fastRoundRect(Size(5, 5), RectCorners(1, 2), Colors.RED)
+                    .position(player.pos.x + 100 * Random.nextFloat(), 0)
+                    .registerBodyWithFixture(type = BodyType.DYNAMIC)
             }
 
             healthLabel.text = " health: $health"
