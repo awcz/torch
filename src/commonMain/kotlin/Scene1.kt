@@ -28,6 +28,7 @@ class Scene1 : Scene() {
 
     private lateinit var collisions: LDTKCollisions
     private lateinit var player: View
+    private var points: Long = 0
     override suspend fun SContainer.sceneMain() {
         val world = resourcesVfs["ldtk/torch_map.ldtk"].readLDTKWorld()
         val mapView = LDTKWorldView(world)
@@ -45,30 +46,42 @@ class Scene1 : Scene() {
         var displayDebugLabels = false
         var currentMove = Point(0, 0)
         var health = 100
+
         val healthLabel = mapView.uiText("")
         val playerPositionLabel = mapView.uiText("")
         playerPositionLabel.x = 200.0
+        val good = mutableListOf<FastRoundRect>()
+        val bad = mutableListOf<FastRoundRect>()
 
         addFixedUpdater(refreshing) {
             moveIfPossible(Point(MOVE_STEP_X, 0) * moveInput)
             currentMove += Point(0, GRAVITY) * refreshing.timeSpan.seconds
             if (!moveIfPossible(currentMove)) {
                 currentMove = Point.ZERO
-            } else {
-                health -= 1
             }
 
             if (Random.nextFloat() < 0.015) {
-                fastRoundRect(Size(5, 5), RectCorners(1, 2), Colors.RED)
+                val item = fastRoundRect(Size(5, 5), RectCorners(1, 2), Colors.RED)
                     .position(player.pos.x + 100 * Random.nextFloat(), 0)
                     .registerBodyWithFixture(type = BodyType.DYNAMIC)
+                bad.add(item)
             }
 
-            healthLabel.text = " health: $health"
+            if (Random.nextFloat() < 0.015) {
+                val item = fastRoundRect(Size(5, 5), RectCorners(1, 2), Colors.GREEN)
+                    .position(player.pos.x + 100 * Random.nextFloat(), 0)
+                    .registerBodyWithFixture(type = BodyType.DYNAMIC)
+
+                good.add(item)
+            }
+
+            healthLabel.text = " health: $health | points: $points"
             playerPositionLabel.x = sceneContainer.width - 100
             playerPositionLabel.text = "[x:${player.pos.x.toInt()}, y:${player.pos.y.toInt()}] "
             healthLabel.visible = displayDebugLabels
             playerPositionLabel.visible = displayDebugLabels
+            checkCollisions(good) { points = points.plus(1) }
+            checkCollisions(bad) { health = health.minus(15) }
         }
 
         mapView.keys {
@@ -82,6 +95,24 @@ class Scene1 : Scene() {
             up(Key.LEFT, Key.RIGHT) { moveInput = 0.0 }
             justDown(Key.D) { displayDebugLabels = !displayDebugLabels }
         }
+    }
+
+    private fun checkCollisions(items: MutableList<FastRoundRect>, fn: () -> Unit) {
+       val toRemove = mutableListOf<FastRoundRect>()
+        items.forEach {
+            if (it.pos.distanceTo(player.pos) < 15) {
+                it.removeFromParent()
+                extracted()
+                toRemove.add(it)
+                fn.invoke()
+            }
+        }
+        items.removeAll(toRemove)
+        // TODO remove items from outside the map
+    }
+
+    private fun extracted() {
+        this.points = points.plus(1)
     }
 
     private fun moveIfPossible(move: Point): Boolean {
